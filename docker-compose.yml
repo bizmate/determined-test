@@ -1,0 +1,44 @@
+version: '2'
+
+services:
+  determined-master:
+    image: determinedai/determined-master:0.20.1
+    restart: on-failure:2
+    ports:
+      - "8080:8080"
+#    environment:
+#      - DET_DB_HOST=determined-db
+#      - DET_DB_NAME=determined
+#      - DET_DB_PORT=5432
+#      - DET_DB_USER=postgres
+#      - DET_DB_PASSWORD=determined
+    volumes:
+      - ./docker/determined-master/master.yaml:/etc/determined/master.yaml
+
+  determined-agent:
+    image: determinedai/determined-agent:0.20.1
+    restart: on-failure:2
+#    ports:
+#      - "8080:8080"
+    volumes:
+      - ./docker/determined-agent/agent.yaml:/etc/determined/agent.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  determined-db:
+    image: postgres:10
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=determined
+      - POSTGRES_PASSWORD=determined
+    volumes:
+      - determined_db:/var/lib/postgresql/data
+
+volumes:
+  determined_db:
+#  websrc:
+#    driver: local
+#    driver_opts:
+#      o: bind
+#      type: none
+#      device: $PWD
