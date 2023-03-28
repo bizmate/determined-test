@@ -36,7 +36,7 @@ master_ip="$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}
 echo "determined-master running on IP: $master_ip"
 
 # run agent
-docker run -d --rm \
+docker run -d --rm --gpus=all \
     -v /var/run/docker.sock:/var/run/docker.sock \
     --name determined-agent \
     -e DET_MASTER_HOST="$master_ip" \

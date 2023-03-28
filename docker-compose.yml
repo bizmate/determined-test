@@ -23,6 +23,13 @@ services:
     volumes:
       - ./docker/determined-agent/agent.yaml:/etc/determined/agent.yaml
       - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
 
   determined-db:
     image: postgres:10
